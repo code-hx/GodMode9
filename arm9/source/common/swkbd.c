@@ -218,12 +218,12 @@ static char KeyboardWait(TouchBox* swkbd, bool uppercase) {
 }
 
 bool ShowKeyboard(char* inputstr, const u32 max_size, const char *format, ...) {
-    const char keys_alphabet[] = { SWKBD_KEYS_ALPHABET };
-    const char keys_special[] = { SWKBD_KEYS_SPECIAL };
-    const char keys_numpad[] = { SWKBD_KEYS_NUMPAD };
-    const u8 layout_alphabet[] = { SWKBD_LAYOUT_ALPHABET };
-    const u8 layout_special[] = { SWKBD_LAYOUT_SPECIAL };
-    const u8 layout_numpad[] = { SWKBD_LAYOUT_NUMPAD };
+    static const char keys_alphabet[] = { SWKBD_KEYS_ALPHABET };
+    static const char keys_special[] = { SWKBD_KEYS_SPECIAL };
+    static const char keys_numpad[] = { SWKBD_KEYS_NUMPAD };
+    static const u8 layout_alphabet[] = { SWKBD_LAYOUT_ALPHABET };
+    static const u8 layout_special[] = { SWKBD_LAYOUT_SPECIAL };
+    static const u8 layout_numpad[] = { SWKBD_LAYOUT_NUMPAD };
     TouchBox swkbd_alphabet[64];
     TouchBox swkbd_special[32];
     TouchBox swkbd_numpad[32];
