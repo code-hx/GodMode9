@@ -133,13 +133,13 @@ bool SetFontFromPbm(const void* pbm, u32 pbm_size) {
 
 void ClearScreen(u16* screen, u32 color)
 {
-    u32 *screen_wide = (u32*)screen;
+    u32 *screen_wide = (u32*)(void*)screen;
     int width = (screen == TOP_SCREEN) ? SCREEN_WIDTH_TOP : SCREEN_WIDTH_BOT;
     if (color == COLOR_TRANSPARENT)
         color = COLOR_BLACK;
 
     color |= color << 16;
-    for (int i = 0; i < (width * SCREEN_HEIGHT); i++)
+    for (int i = 0; i < (width * SCREEN_HEIGHT / 2); i++)
         *(screen_wide++) = color;
 }
 
@@ -224,7 +224,7 @@ void DrawQrCode(u16 *screen, const u8* qrcode)
         int yDisplacement = SCREEN_HEIGHT - (y_qr + y) - 1;
         u16* screenPos = screen + xDisplacement + yDisplacement;
         for (u32 x = 0; x < size_qr_s; x++) {
-            u8 c = qrcodegen_getModule(qrcode, x/scale, y/scale) ? COLOR_WHITE : COLOR_BLACK;
+            u16 c = qrcodegen_getModule(qrcode, x/scale, y/scale) ? COLOR_BLACK : COLOR_WHITE;
             *(screenPos) = c;
             screenPos += SCREEN_HEIGHT;
         }

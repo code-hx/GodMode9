@@ -186,10 +186,10 @@ void CheckBattery(u32* battery, bool* is_charging) {
     }
 }
 
-void GenerateBatteryBitmap(u8* bitmap, u32 width, u32 height, u32 color_bg) {
-    const u32 color_outline = COLOR_BLACK;
-    const u32 color_inline = COLOR_LIGHTGREY;
-    const u32 color_inside = COLOR_LIGHTERGREY;
+void DrawBatteryBitmap(u16* screen, u32 b_x, u32 b_y, u32 width, u32 height, u16 color_bg) {
+    const u16 color_outline = COLOR_BLACK;
+    const u16 color_inline = COLOR_LIGHTGREY;
+    const u16 color_inside = COLOR_LIGHTERGREY;
     
     if ((width < 8) || (height < 6)) return;
     
@@ -197,7 +197,7 @@ void GenerateBatteryBitmap(u8* bitmap, u32 width, u32 height, u32 color_bg) {
     bool is_charging;
     CheckBattery(&battery, &is_charging);
     
-    u32 color_battery = (is_charging) ? COLOR_BATTERY_CHARGING :
+    u16 color_battery = (is_charging) ? COLOR_BATTERY_CHARGING :
         (battery > 70) ? COLOR_BATTERY_FULL : (battery > 30) ? COLOR_BATTERY_MEDIUM : COLOR_BATTERY_LOW;
     u32 nub_size = (height < 12) ? 1 : 2;
     u32 width_inside = width - 4 - nub_size;
@@ -207,15 +207,13 @@ void GenerateBatteryBitmap(u8* bitmap, u32 width, u32 height, u32 color_bg) {
         const u32 mirror_y = (y >= (height+1) / 2) ? height - 1 - y : y;
         for (u32 x = 0; x < width; x++) {
             const u32 rev_x = width - x - 1;
-            u32 color = 0;
+            u16 color = 0;
             if (mirror_y == 0) color = (rev_x >= nub_size) ? color_outline : color_bg;
             else if (mirror_y == 1) color = ((x == 0) || (rev_x == nub_size)) ? color_outline : (rev_x < nub_size) ? color_bg : color_inline;
             else if (mirror_y == 2) color = ((x == 0) || (rev_x <= nub_size)) ? color_outline : ((x == 1) || (rev_x == (nub_size+1))) ? color_inline : color_inside;
             else color = ((x == 0) || (rev_x == 0)) ? color_outline : ((x == 1) || (rev_x <= (nub_size+1))) ? color_inline : color_inside;
             if ((color == color_inside) && (x < (2 + width_battery))) color = color_battery;
-            *(bitmap++) = color >> 16;  // B
-            *(bitmap++) = color >> 8;   // G
-            *(bitmap++) = color & 0xFF; // R
+            DrawPixel(screen, b_x + x, b_y + y, color);
         }
     }
 }
@@ -265,10 +263,7 @@ void DrawTopBar(const char* curr_path) {
         char timestr[32];
         GetTimeString(timestr, false, false);
         DrawStringF(TOP_SCREEN, clock_x, bartxt_start, COLOR_STD_BG, COLOR_TOP_BAR, "%14.14s", timestr);
-        
-        u8 bitmap[battery_width * battery_height * BYTES_PER_PIXEL];
-        GenerateBatteryBitmap(bitmap, battery_width, battery_height, COLOR_TOP_BAR);
-        DrawBitmap(TOP_SCREEN, battery_x, battery_y, battery_width, battery_height, bitmap);
+        DrawBatteryBitmap(TOP_SCREEN, battery_x, battery_y, battery_width, battery_height, COLOR_TOP_BAR);
     }
 }
 
