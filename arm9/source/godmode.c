@@ -2058,15 +2058,15 @@ u32 GodMode(int entrypoint) {
     }
     
     // check for embedded essential backup
-    if (((entrypoint == ENTRY_NANDBOOT) || (entrypoint == ENTRY_B9S)) &&
-        !PathExist("S:/essential.exefs") && CheckGenuineNandNcsd() &&
-        ShowPrompt(true, "Essential files backup not found.\nCreate one now?")) {
-        if (EmbedEssentialBackup("S:/nand.bin") == 0) {
-            u32 flags = BUILD_PATH | SKIP_ALL;
-            PathCopy(OUTPUT_PATH, "S:/essential.exefs", &flags);
-            ShowPrompt(false, "Backup embedded in SysNAND\nand written to " OUTPUT_PATH ".");
-        }
-    }
+//    if (((entrypoint == ENTRY_NANDBOOT) || (entrypoint == ENTRY_B9S)) &&
+//        !PathExist("S:/essential.exefs") && CheckGenuineNandNcsd() &&
+//        ShowPrompt(true, "Essential files backup not found.\nCreate one now?")) {
+//        if (EmbedEssentialBackup("S:/nand.bin") == 0) {
+//            u32 flags = BUILD_PATH | SKIP_ALL;
+//            PathCopy(OUTPUT_PATH, "S:/essential.exefs", &flags);
+//            ShowPrompt(false, "Backup embedded in SysNAND\nand written to " OUTPUT_PATH ".");
+//        }
+//    }
     
     // check internal clock
     if (IS_SIGHAX) { // we could actually do this on any entrypoint
